@@ -2,6 +2,7 @@
 
 
 import sys
+sys.path.insert(0, '..')
 from python_environment_check import check_packages
 import numpy as np
 import os
@@ -18,7 +19,6 @@ from matplotlib.colors import ListedColormap
 
 
 
-sys.path.insert(0, '..')
 
 
 # Check recommended package versions:
@@ -141,21 +141,41 @@ class Perceptron:
 
         for _ in range(self.n_iter):
             errors = 0
+            n_inner = 0
+            print("\n########################################################## iter %d" % (_))
             for xi, target in zip(X, y):
+                print("\n## iter %d.%d" % (_, n_inner))
+                print("xi = '%s'; target = '%s'" % (str(xi), target))
                 update = self.eta * (target - self.predict(xi))
+                print("update = %f" % update)
                 self.w_ += update * xi
                 self.b_ += update
                 errors += int(update != 0.0)
+                print("errors: %d" % errors)
+                n_inner += 1
             self.errors_.append(errors)
+            # break
+            # 
         return self
 
     def net_input(self, X):
         """Calculate net input"""
-        return np.dot(X, self.w_) + self.b_
+        dot = np.dot(X, self.w_)
+        print("net_input()")
+        print("self.w_: %s" % self.w_)
+        print("dot: %s" % dot)
+        print("self.b_: %s" % self.b_)
+        return dot + self.b_
 
     def predict(self, X):
         """Return class label after unit step"""
-        return np.where(self.net_input(X) >= 0.0, 1, 0)
+        print("predict(%s)\n" % X)
+        net_input = self.net_input(X)
+        # where = np.where(net_input >= 0.0, 1, 0) ## confusing!!
+        where = 1 if net_input > 0.0 else 0
+        print("net_input = %s ; where = %s" % (net_input, where))
+
+        return where
 
 
 
@@ -200,23 +220,27 @@ df.tail()
 
 # select setosa and versicolor
 y = df.iloc[0:100, 4].values
+
+
 y = np.where(y == 'Iris-setosa', 0, 1)
+
 
 # extract sepal length and petal length
 X = df.iloc[0:100, [0, 2]].values
 
-# plot data
-plt.scatter(X[:50, 0], X[:50, 1],
-            color='red', marker='o', label='Setosa')
-plt.scatter(X[50:100, 0], X[50:100, 1],
-            color='blue', marker='s', label='Versicolor')
 
-plt.xlabel('Sepal length [cm]')
-plt.ylabel('Petal length [cm]')
-plt.legend(loc='upper left')
+# # plot data
+# plt.scatter(X[:50, 0], X[:50, 1],
+#             color='red', marker='o', label='Setosa')
+# plt.scatter(X[50:100, 0], X[50:100, 1],
+#             color='blue', marker='s', label='Versicolor')
 
-# plt.savefig('images/02_06.png', dpi=300)
-plt.show()
+# plt.xlabel('Sepal length [cm]')
+# plt.ylabel('Petal length [cm]')
+# plt.legend(loc='upper left')
+
+# # plt.savefig('images/02_06.png', dpi=300)
+# plt.show()
 
 
 
@@ -227,6 +251,9 @@ plt.show()
 ppn = Perceptron(eta=0.1, n_iter=10)
 
 ppn.fit(X, y)
+print("total errors: %s" % ppn.errors_);
+
+quit()
 
 plt.plot(range(1, len(ppn.errors_) + 1), ppn.errors_, marker='o')
 plt.xlabel('Epochs')
@@ -282,6 +309,7 @@ plt.legend(loc='upper left')
 
 #plt.savefig('images/02_08.png', dpi=300)
 plt.show()
+
 
 
 
