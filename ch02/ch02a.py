@@ -173,7 +173,7 @@ class Perceptron:
         net_input = self.net_input(X)
         # where = np.where(net_input >= 0.0, 1, 0) ## confusing!!
         where = 1 if net_input > 0.0 else 0
-        print("net_input = %s ; where = %s" % (net_input, where))
+        print("net_input = %s ; prediction = %s" % (net_input, where))
 
         return where
 
@@ -248,7 +248,7 @@ X = df.iloc[0:100, [0, 2]].values
 
 
 
-ppn = Perceptron(eta=0.1, n_iter=10)
+ppn = Perceptron(eta=.1, n_iter=10)
 
 ppn.fit(X, y)
 print("total errors: %s" % ppn.errors_);
