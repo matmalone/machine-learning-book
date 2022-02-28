@@ -234,12 +234,18 @@ X = df.iloc[0:100, [0, 2]].values
 # print("df: %s" % df)
 # print("df.columns: %s" % df.columns)
 # print("filter(): %s" % df.filter(like='Iris-setosa', axis=1))
-setosa = df.loc[df[4] == "Iris-setosa"]
+setosa = np.array(df.loc[df[4] == "Iris-setosa"])
 
-plt.scatter(X[:50, 0], X[:50, 1],
+versicolor = np.array(df.loc[df[4] == "Iris-versicolor"])
+
+plt.scatter(setosa[:, 0], setosa[:, 2],
             color='red', marker='o', label='Setosa')
-plt.scatter(X[50:100, 0], X[50:100, 1],
+# plt.scatter(X[:50, 0], X[:50, 1],
+#             color='red', marker='o', label='Setosa')
+plt.scatter(versicolor[:, 0], versicolor[:, 2],
             color='blue', marker='s', label='Versicolor')
+# plt.scatter(X[50:100, 0], X[50:100, 1],
+#             color='blue', marker='s', label='Versicolor')
 
 plt.xlabel('Sepal length [cm]')
 plt.ylabel('Petal length [cm]')
@@ -259,7 +265,6 @@ ppn = Perceptron(eta=.1, n_iter=10)
 ppn.fit(X, y)
 # print("total errors: %s" % ppn.errors_);
 
-quit()
 
 plt.plot(range(1, len(ppn.errors_) + 1), ppn.errors_, marker='o')
 plt.xlabel('Epochs')
@@ -267,6 +272,8 @@ plt.ylabel('Number of updates')
 
 # plt.savefig('images/02_07.png', dpi=300)
 plt.show()
+
+quit()
 
 
 
