@@ -171,8 +171,7 @@ class Perceptron:
         """Return class label after unit step"""
         # print("predict(%s)\n" % X)
         net_input = self.net_input(X)
-        ### # where = np.where(net_input >= 0.0, 1, 0) ## confusing!!
-        where = 1 if net_input > 0.0 else 0
+        where = np.where(net_input >= 0.0, 1, 0) ## confusing but allows you to process multiple rows at a time!!
         # print("net_input = %s ; prediction = %s" % (net_input, where))
 
         return where
@@ -276,6 +275,7 @@ plt.xticks(np.arange(2, 10, step=2))
 plt.show()
 
 
+# quit()
 
 
 # ### A function for plotting decision regions
