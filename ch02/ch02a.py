@@ -269,11 +269,12 @@ ppn.fit(X, y)
 plt.plot(range(1, len(ppn.errors_) + 1), ppn.errors_, marker='o')
 plt.xlabel('Epochs')
 plt.ylabel('Number of updates')
+# plt.grid()
+plt.xticks(np.arange(2, 10, step=2))
 
 # plt.savefig('images/02_07.png', dpi=300)
 plt.show()
 
-quit()
 
 
 
@@ -323,6 +324,7 @@ plt.legend(loc='upper left')
 #plt.savefig('images/02_08.png', dpi=300)
 plt.show()
 
+quit()
 
 
 
