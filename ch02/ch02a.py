@@ -142,16 +142,16 @@ class Perceptron:
         for _ in range(self.n_iter):
             errors = 0
             n_inner = 0
-            print("\n########################################################## iter %d" % (_))
+            # print("\n########################################################## iter %d" % (_))
             for xi, target in zip(X, y):
-                print("\n## iter %d.%d" % (_, n_inner))
-                print("xi = '%s'; target = '%s'" % (str(xi), target))
+                # print("\n## iter %d.%d" % (_, n_inner))
+                # print("xi = '%s'; target = '%s'" % (str(xi), target))
                 update = self.eta * (target - self.predict(xi))
-                print("update = %f" % update)
+                # print("update = %f" % update)
                 self.w_ += update * xi
                 self.b_ += update
                 errors += int(update != 0.0)
-                print("errors: %d" % errors)
+                # print("errors: %d" % errors)
                 n_inner += 1
             self.errors_.append(errors)
             # break
@@ -161,19 +161,19 @@ class Perceptron:
     def net_input(self, X):
         """Calculate net input"""
         dot = np.dot(X, self.w_)
-        print("net_input()")
-        print("self.w_: %s" % self.w_)
-        print("dot: %s" % dot)
-        print("self.b_: %s" % self.b_)
+        # print("net_input()")
+        # print("self.w_: %s" % self.w_)
+        # print("dot: %s" % dot)
+        # print("self.b_: %s" % self.b_)
         return dot + self.b_
 
     def predict(self, X):
         """Return class label after unit step"""
-        print("predict(%s)\n" % X)
+        # print("predict(%s)\n" % X)
         net_input = self.net_input(X)
-        # where = np.where(net_input >= 0.0, 1, 0) ## confusing!!
+        ### # where = np.where(net_input >= 0.0, 1, 0) ## confusing!!
         where = 1 if net_input > 0.0 else 0
-        print("net_input = %s ; prediction = %s" % (net_input, where))
+        # print("net_input = %s ; prediction = %s" % (net_input, where))
 
         return where
 
@@ -229,18 +229,24 @@ y = np.where(y == 'Iris-setosa', 0, 1)
 X = df.iloc[0:100, [0, 2]].values
 
 
-# # plot data
-# plt.scatter(X[:50, 0], X[:50, 1],
-#             color='red', marker='o', label='Setosa')
-# plt.scatter(X[50:100, 0], X[50:100, 1],
-#             color='blue', marker='s', label='Versicolor')
+# plot data
+# setosa = np.where()
+# print("df: %s" % df)
+# print("df.columns: %s" % df.columns)
+# print("filter(): %s" % df.filter(like='Iris-setosa', axis=1))
+setosa = df.loc[df[4] == "Iris-setosa"]
 
-# plt.xlabel('Sepal length [cm]')
-# plt.ylabel('Petal length [cm]')
-# plt.legend(loc='upper left')
+plt.scatter(X[:50, 0], X[:50, 1],
+            color='red', marker='o', label='Setosa')
+plt.scatter(X[50:100, 0], X[50:100, 1],
+            color='blue', marker='s', label='Versicolor')
 
-# # plt.savefig('images/02_06.png', dpi=300)
-# plt.show()
+plt.xlabel('Sepal length [cm]')
+plt.ylabel('Petal length [cm]')
+plt.legend(loc='upper left')
+
+# plt.savefig('images/02_06.png', dpi=300)
+plt.show()
 
 
 
@@ -251,7 +257,7 @@ X = df.iloc[0:100, [0, 2]].values
 ppn = Perceptron(eta=.1, n_iter=10)
 
 ppn.fit(X, y)
-print("total errors: %s" % ppn.errors_);
+# print("total errors: %s" % ppn.errors_);
 
 quit()
 
