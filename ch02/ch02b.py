@@ -112,7 +112,7 @@ class Perceptron2:
       Number of misclassifications (updates) in each epoch.
 
     """
-    def __init__(self, eta=0.01, n_iter=50, random_state=1):
+    def __init__(self, eta, n_iter=50, random_state=1):
         self.eta = eta
         self.n_iter = n_iter
         self.random_state = random_state
@@ -137,19 +137,16 @@ class Perceptron2:
         self.w_ = rgen.normal(loc=0.0, scale=0.01, size=X.shape[1])
         self.b_ = np.float_(0.)
         
-        self.errors_ = []
+        self.losses_ = []
 
         for _ in range(self.n_iter):
-            errors = 0
-            n_inner = 0
-            # print("\n########################################################## iter %d" % (_))
-            for xi, target in zip(X, y):
-                update = self.eta * (target - self.predict(xi))
-                self.w_ += update * xi
-                self.b_ += update
-                errors += int(update != 0.0)
-                n_inner += 1
-            self.errors_.append(errors)
+            net_input = self.net_input(X)
+            output = self.activation(net_input)
+            errors = y - output
+            self.w_ += self.eta * 2.0 * X.T.dot(errors) / X.shape[0];
+            self.b_ += self.eta * 2.0 * errors.mean()
+            loss = (errors ** 2).mean()
+            self.losses_.append(loss)
         return self
 
     def net_input(self, X):
@@ -161,11 +158,16 @@ class Perceptron2:
         # print("self.b_: %s" % self.b_)
         return dot + self.b_
 
+    def activation(self, X):
+        """Compute linear activation."""
+        return X
+
+
     def predict(self, X):
         """Return class label after unit step"""
         # print("predict(%s)\n" % X)
         net_input = self.net_input(X)
-        where = np.where(net_input >= 0.0, 1, 0) ## confusing but allows you to process multiple rows at a time!!
+        where = np.where(self.activation(net_input) >= 0.5, 1, 0) ## confusing but allows you to process multiple rows at a time!!
         # print("net_input = %s ; prediction = %s" % (net_input, where))
 
         return where
@@ -254,13 +256,14 @@ plt.show()
 
 
 
-ppn = Perceptron2(eta=.1, n_iter=10)
+ppn = Perceptron2(eta=.01, n_iter=10)
 
 ppn.fit(X, y)
 # print("total errors: %s" % ppn.errors_);
 
 
-plt.plot(range(1, len(ppn.errors_) + 1), ppn.errors_, marker='o')
+# plt.plot(range(1, len(ppn.errors_) + 1), ppn.errors_, marker='o')
+plt.plot(range(1, len(ppn.losses_) + 1), ppn.losses_, marker='o')
 plt.xlabel('Epochs')
 plt.ylabel('Number of updates')
 # plt.grid()
